@@ -1,0 +1,14 @@
+{
+  "name": "shopr-bot-site",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "cd Shopr && npm install && npm run build",
+    "start": "node api/index.js",
+    "dev": "npm run build && npm start"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
+
