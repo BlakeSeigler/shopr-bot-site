@@ -6,14 +6,14 @@ const app = express();
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Serve built React app
-app.use(express.static(join(__dirname, '../Shopr/build')));
+app.use(express.static(join(__dirname, '../build')));
 
 // Optionally serve legacy static assets if needed
 // app.use('/static', express.static(join(__dirname, '../static')));
 
 // Catch-all handler for React Router
 app.get('*', (req, res) => {
-  res.sendFile(join(__dirname, '../Shopr/build/index.html'));
+  res.sendFile(join(__dirname, '../build/index.html'));
 });
 
 // For local development - start server if run directly
@@ -24,7 +24,7 @@ if (isRunningDirectly) {
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
     console.log(`\n🚀 Server running at http://localhost:${PORT}`);
-    console.log(`📦 Serving React app from: ${join(__dirname, '../Shopr/build')}\n`);
+    console.log(`📦 Serving React app from: ${join(__dirname, '../build')}\n`);
   });
 }
 
