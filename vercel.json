@@ -5,7 +5,7 @@
       "src": "Shopr/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "Shopr/build"
+        "distDir": "build"
       }
     },
     {
