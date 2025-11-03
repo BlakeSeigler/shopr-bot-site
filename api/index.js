@@ -7,6 +7,10 @@ import nodemailer from 'nodemailer';
 const app = express();
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+// Check if running locally or on Vercel
+const isRunningDirectly = import.meta.url === `file://${process.argv[1]}` || 
+                          process.argv[1]?.includes('api/index.js');
+
 // Middleware to parse JSON bodies
 app.use(express.json());
 
@@ -74,21 +78,26 @@ ${message}
   }
 });
 
-// Serve built React app (after API routes)
-app.use(express.static(join(__dirname, '../build')));
-
-// Optionally serve legacy static assets if needed
-// app.use('/static', express.static(join(__dirname, '../static')));
-
-// Catch-all handler for React Router
-app.get('*', (req, res) => {
-  res.sendFile(join(__dirname, '../build/index.html'));
-});
+// Serve built React app (only in local development)
+// On Vercel, static files are served automatically
+if (isRunningDirectly) {
+  app.use(express.static(join(__dirname, '../build')));
+  
+  // Catch-all handler for React Router (local development)
+  app.get('*', (req, res) => {
+    res.sendFile(join(__dirname, '../build/index.html'));
+  });
+} else {
+  // On Vercel, only handle API routes and serve index.html for React Router
+  // Static assets are served directly by Vercel from build directory
+  app.get('*', (req, res) => {
+    // For Vercel, build directory is relative to api directory
+    const indexPath = join(__dirname, '../build', 'index.html');
+    res.sendFile(indexPath);
+  });
+}
 
 // For local development - start server if run directly
-const isRunningDirectly = import.meta.url === `file://${process.argv[1]}` || 
-                          process.argv[1]?.includes('api/index.js');
-
 if (isRunningDirectly) {
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
