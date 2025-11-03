@@ -12,11 +12,38 @@ export function Contact() {
     company: '',
     message: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Handle form submission
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setSubmitStatus('success');
+        setFormData({ name: '', email: '', company: '', message: '' });
+        setTimeout(() => setSubmitStatus('idle'), 5000);
+      } else {
+        setSubmitStatus('error');
+        setTimeout(() => setSubmitStatus('idle'), 5000);
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setSubmitStatus('error');
+      setTimeout(() => setSubmitStatus('idle'), 5000);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -62,7 +89,7 @@ export function Contact() {
                 </div>
                 <div>
                   <h4 className="mb-1">Email</h4>
-                  <p className="text-gray-400">contact@shopr.com</p>
+                  <p className="text-gray-400">blake_seigler@unc.edu</p>
                 </div>
               </div>
 
@@ -72,7 +99,7 @@ export function Contact() {
                 </div>
                 <div>
                   <h4 className="mb-1">Phone</h4>
-                  <p className="text-gray-400">+1 (555) 123-4567</p>
+                  <p className="text-gray-400">910-859-3018</p>
                 </div>
               </div>
 
@@ -82,7 +109,7 @@ export function Contact() {
                 </div>
                 <div>
                   <h4 className="mb-1">Location</h4>
-                  <p className="text-gray-400">San Francisco, CA</p>
+                  <p className="text-gray-400">Chapel Hill, NC</p>
                 </div>
               </div>
             </div>
@@ -158,10 +185,21 @@ export function Contact() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 type="submit"
-                className="w-full bg-cyan-500 hover:bg-cyan-600 text-black py-4 rounded-lg transition-colors text-center"
+                disabled={isSubmitting}
+                className="w-full bg-cyan-500 hover:bg-cyan-600 disabled:bg-cyan-500/50 disabled:cursor-not-allowed text-black py-4 rounded-lg transition-colors text-center"
               >
-                Submit
+                {isSubmitting ? 'Sending...' : 'Submit'}
               </motion.button>
+              {submitStatus === 'success' && (
+                <p className="text-green-400 text-sm text-center mt-2">
+                  ✓ Message sent successfully! We'll get back to you soon.
+                </p>
+              )}
+              {submitStatus === 'error' && (
+                <p className="text-red-400 text-sm text-center mt-2">
+                  ✗ Failed to send message. Please try again or email us directly.
+                </p>
+              )}
             </form>
           </motion.div>
         </div>

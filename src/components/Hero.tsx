@@ -29,7 +29,7 @@ export function Hero() {
         className="relative z-10 flex items-center justify-between px-8 py-6 md:px-16"
       >
         <div className="flex items-center gap-3">
-          <img src={nameImage} alt="Shopr" className="h-12" />
+          <img src={nameImage} alt="Shopr" className="h-[4.8rem]" />
         </div>
         <div className="hidden md:flex gap-8">
           <a href="#mission" className="hover:text-cyan-400 transition-colors">Mission</a>

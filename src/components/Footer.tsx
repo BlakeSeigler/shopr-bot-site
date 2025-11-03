@@ -38,7 +38,7 @@ export function Footer() {
             <motion.a
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
-              href="mailto:contact@shopr.com"
+              href="mailto:blake_seigler@unc.edu"
               className="w-10 h-10 rounded-full border border-cyan-500/30 flex items-center justify-center hover:border-cyan-500 hover:bg-cyan-500/10 transition-colors inline-flex"
             >
               <Mail className="w-5 h-5" />
